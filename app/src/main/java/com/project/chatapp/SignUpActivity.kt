@@ -28,27 +28,39 @@ class SignUpActivity : AppCompatActivity() {
             val password: String = etPassword.text.toString()
             val confirmPassword: String = etConfirmPassword.text.toString()
 
-            if(TextUtils.isEmpty(userName)) {
-                Toast.makeText(applicationContext,"UserName is required", Toast.LENGTH_SHORT).show()
+            if (TextUtils.isEmpty(userName)) {
+                Toast.makeText(applicationContext, "UserName is required", Toast.LENGTH_SHORT)
+                    .show()
+            } else if (TextUtils.isEmpty(email)) {
+                Toast.makeText(applicationContext, "Email is required", Toast.LENGTH_SHORT)
+                    .show()
+            } else if (TextUtils.isEmpty(password)) {
+                Toast.makeText(
+                    applicationContext,
+                    "Password is required",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else if (TextUtils.isEmpty(confirmPassword)) {
+                Toast.makeText(
+                    applicationContext,
+                    "Password Confirmation is required",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else if (!password.equals(confirmPassword)) {
+                Toast.makeText(
+                    applicationContext,
+                    "Password Confirmation is required",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                registerUser(userName, email, password)
             }
-            if(TextUtils.isEmpty(email)) {
-                Toast.makeText(applicationContext,"Email is required", Toast.LENGTH_SHORT).show()
-            }
-
-            if(TextUtils.isEmpty(password)) {
-                Toast.makeText(applicationContext,"Password is required", Toast.LENGTH_SHORT).show()
-            }
-            if(TextUtils.isEmpty(confirmPassword)) {
-                Toast.makeText(applicationContext,"Password Confirmation is required", Toast.LENGTH_SHORT).show()
-            }
-
-            if(!password.equals(confirmPassword)) {
-                Toast.makeText(applicationContext,"Password doesn't match", Toast.LENGTH_SHORT).show()
-            }
-
-            registerUser(userName, email, password)
         }
 
+        btnLogin.setOnClickListener {
+            val intent = Intent(this@SignUpActivity, LoginActivity::class.java)
+            startActivity(intent)
+        }
 
     }
 
@@ -71,12 +83,14 @@ class SignUpActivity : AppCompatActivity() {
                     databaseReference.setValue(hashMap).addOnCompleteListener(this) {
                         if (it.isSuccessful) {
                             // Open Home activity
+                            etName.setText("")
+                            etEmail.setText("")
+                            etPassword.setText("")
+                            etConfirmPassword.setText("")
                             val intent = Intent(this@SignUpActivity, HomeActivity::class.java)
                             startActivity(intent)
                         }
                     }
-
-
                 }
             }
     }
