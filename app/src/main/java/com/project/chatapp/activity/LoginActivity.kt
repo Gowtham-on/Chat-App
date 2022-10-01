@@ -1,12 +1,12 @@
-package com.project.chatapp
+package com.project.chatapp.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.project.chatapp.R
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -35,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
                         if(it.isSuccessful) {
                             etEmail.setText("")
                             etPassword.setText("")
-                            val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                            val intent = Intent(this@LoginActivity, UserActivity::class.java)
                             startActivity(intent)
                         } else {
                             Toast.makeText(

@@ -1,4 +1,4 @@
-package com.project.chatapp
+package com.project.chatapp.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.project.chatapp.R
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
 class SignUpActivity : AppCompatActivity() {
@@ -87,7 +88,7 @@ class SignUpActivity : AppCompatActivity() {
                             etEmail.setText("")
                             etPassword.setText("")
                             etConfirmPassword.setText("")
-                            val intent = Intent(this@SignUpActivity, HomeActivity::class.java)
+                            val intent = Intent(this@SignUpActivity, UserActivity::class.java)
                             startActivity(intent)
                         }
                     }
