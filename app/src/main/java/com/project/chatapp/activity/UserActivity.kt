@@ -49,10 +49,10 @@ class UserActivity : AppCompatActivity() {
 
                 val currentUser = snapshot.getValue(User::class.java)
 
-                if (currentUser!!.userImage == "") {
+                if (currentUser!!.profileImage == "") {
                     imgProfile.setImageResource(R.drawable.profile_image)
                 } else {
-                    Glide.with(this@UserActivity).load(currentUser.userImage).into(imgProfile)
+                    Glide.with(this@UserActivity).load(currentUser.profileImage).into(imgProfile)
                 }
 
                 for (dataSnapshot: DataSnapshot in snapshot.children) {
