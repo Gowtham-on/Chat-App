@@ -24,11 +24,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.HomeActivity"
+            android:name=".activity.ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".activity.SignUpActivity"
-            android:exported="false"></activity>
+            android:exported="false">
+
+            </activity>
     </application>
 
 </manifest>

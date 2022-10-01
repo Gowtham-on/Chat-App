@@ -4,20 +4,35 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.project.chatapp.R
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var firebaseUser: FirebaseUser
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         auth = FirebaseAuth.getInstance()
+
+        if(auth == null) {
+            val intent = Intent(this@LoginActivity, SignUpActivity::class.java)
+            startActivity(intent)
+        }
+        firebaseUser = auth.currentUser!!
+
+        if(firebaseUser != null) {
+            val intent = Intent(this@LoginActivity, UserActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         btnLogin.setOnClickListener {
             val email: String = etEmail.text.toString()
@@ -37,6 +52,7 @@ class LoginActivity : AppCompatActivity() {
                             etPassword.setText("")
                             val intent = Intent(this@LoginActivity, UserActivity::class.java)
                             startActivity(intent)
+                            finish()
                         } else {
                             Toast.makeText(
                                 applicationContext,
@@ -50,6 +66,7 @@ class LoginActivity : AppCompatActivity() {
         btnSignup.setOnClickListener {
             val intent = Intent(this@LoginActivity, SignUpActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
     }
