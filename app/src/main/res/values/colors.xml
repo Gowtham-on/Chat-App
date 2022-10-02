@@ -13,4 +13,6 @@
     <color name="ColorText">#464646</color>
     <color name="ColorDarkGray">#464646</color>
     <color name="ColorTextBackground">#f5f5f5</color>
+    <color name="colorItemLeft">#D3CECE</color>
+    <color name="colorItemRight">#813fd7</color>
 </resources>

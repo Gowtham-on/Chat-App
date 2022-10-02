@@ -56,7 +56,6 @@ class UserActivity : AppCompatActivity() {
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 userList.clear()
-                var userForProfileImage: User? = null
 
                 val currentUser = snapshot.getValue(User::class.java)
 
@@ -71,8 +70,6 @@ class UserActivity : AppCompatActivity() {
 
                     if (!user!!.userId.equals(firebase.uid)) {
                         userList.add(user)
-                    } else {
-                        userForProfileImage = user
                     }
                 }
 

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".activity.UserActivity">
+    tools:context=".activity.ChatActivity">
 
     <LinearLayout
+        android:id="@+id/l1"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center_vertical"
@@ -43,8 +43,47 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/userRecyclerView"
+        android:id="@+id/chatRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/l1" />
 
-</LinearLayout>
+    <RelativeLayout
+        android:id="@+id/r1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/etMessage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/ColorTextBackground"
+                android:fontFamily="@font/gilroy_light"
+                android:hint="@string/type_message"
+                android:inputType="text"
+                android:padding="12dp"
+                android:textColor="#813fd7" />
+
+            <ImageButton
+                android:id="@+id/btnSendMessage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/button_background"
+                android:src="@drawable/ic_send"
+                android:text="@string/btn_login"
+                android:textColor="@color/ColorAccent" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

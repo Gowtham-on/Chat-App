@@ -22,13 +22,14 @@ class LoginActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        if(auth == null) {
-            val intent = Intent(this@LoginActivity, SignUpActivity::class.java)
-            startActivity(intent)
-        }
-        firebaseUser = auth.currentUser!!
+//        if(auth.currentUser == null) {
+//            Log.d("LoginChk", "in if")
+//            val intent = Intent(this@LoginActivity, LoginActivity::class.java)
+//            startActivity(intent)
+//        }
+//        firebaseUser =
 
-        if(firebaseUser != null) {
+        if(auth.currentUser != null) {
             val intent = Intent(this@LoginActivity, UserActivity::class.java)
             startActivity(intent)
             finish()
