@@ -1,9 +1,13 @@
 package com.project.chatapp.activity
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +19,13 @@ import com.google.firebase.database.*
 import com.project.chatapp.R
 import com.project.chatapp.adapter.UserAdapter
 import com.project.chatapp.model.User
+import kotlinx.android.synthetic.main.activity_chat.*
+import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.activity_user.*
+import kotlinx.android.synthetic.main.activity_user.imgBack
+import kotlinx.android.synthetic.main.activity_user.imgProfile
+import kotlinx.android.synthetic.main.activity_user.userRecyclerView
+import java.io.IOException
 
 class UserActivity : AppCompatActivity() {
     var userList = ArrayList<User>()
@@ -46,6 +56,7 @@ class UserActivity : AppCompatActivity() {
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 userList.clear()
+                var userForProfileImage: User? = null
 
                 val currentUser = snapshot.getValue(User::class.java)
 
@@ -58,11 +69,13 @@ class UserActivity : AppCompatActivity() {
                 for (dataSnapshot: DataSnapshot in snapshot.children) {
                     val user = dataSnapshot.getValue(User::class.java)
 
-                    Log.d("inLoop", user!!.userName.toString())
                     if (!user!!.userId.equals(firebase.uid)) {
                         userList.add(user)
+                    } else {
+                        userForProfileImage = user
                     }
                 }
+
                 val userAdapter = UserAdapter(this@UserActivity, userList)
                 userRecyclerView.adapter = userAdapter
             }
@@ -72,7 +85,6 @@ class UserActivity : AppCompatActivity() {
             }
         })
     }
-
 }
 
 //https://cdn.pixabay.com/photo/2015/11/16/14/43/cat-1045782_960_720.jpg

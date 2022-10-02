@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
+            android:name=".activity.ChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.UserActivity"
             android:exported="false" />
         <activity
@@ -29,9 +32,7 @@
             android:exported="false" />
         <activity
             android:name=".activity.SignUpActivity"
-            android:exported="false">
-
-            </activity>
+            android:exported="false"></activity>
     </application>
 
 </manifest>

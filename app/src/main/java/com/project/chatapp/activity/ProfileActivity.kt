@@ -58,13 +58,12 @@ class ProfileActivity : AppCompatActivity() {
                 val user = snapshot.getValue(User::class.java)
                 etUserName.setText(user!!.userName)
 
-
                 if (user.profileImage == "") {
-                    Log.d("Checkingg", user!!.profileImage + " in if")
+//                    Log.d("Checkingg", user!!.profileImage + " in if")
                     userImage.setImageResource(R.drawable.profile_image)
                 } else {
-                    Log.d("Checkingg", user.profileImage+"in else")
-                    Log.d("Checkingg", filePath.toString() + "in else")
+//                    Log.d("Checkingg", user.profileImage+"in else")
+//                    Log.d("Checkingg", filePath.toString() + "in else")
                     Glide.with(this@ProfileActivity).load(user.profileImage).into(userImage)
                 }
             }
@@ -92,9 +91,8 @@ class ProfileActivity : AppCompatActivity() {
 //        }
     }
 
-
     private fun chooseImage() {
-        var intent: Intent = Intent()
+        var intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
         startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST)
@@ -113,7 +111,6 @@ class ProfileActivity : AppCompatActivity() {
             } catch (err: IOException) {
                 err.printStackTrace()
             }
-
         }
     }
 
