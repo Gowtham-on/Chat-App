@@ -1,14 +1,10 @@
 package com.project.chatapp.activity
 
+import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
-import android.view.View
-import android.widget.LinearLayout
+import android.text.TextUtils
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,8 +12,10 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.google.firebase.messaging.FirebaseMessaging
 import com.project.chatapp.R
 import com.project.chatapp.adapter.UserAdapter
+import com.project.chatapp.firebase.FirebaseService
 import com.project.chatapp.model.User
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.activity_profile.*
@@ -25,13 +23,25 @@ import kotlinx.android.synthetic.main.activity_user.*
 import kotlinx.android.synthetic.main.activity_user.imgBack
 import kotlinx.android.synthetic.main.activity_user.imgProfile
 import kotlinx.android.synthetic.main.activity_user.userRecyclerView
-import java.io.IOException
+import kotlinx.android.synthetic.main.item_user.*
 
 class UserActivity : AppCompatActivity() {
     var userList = ArrayList<User>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user)
+
+        FirebaseService.sharedPref = getSharedPreferences("sharedPref", Context.MODE_PRIVATE)
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    if (task.result != null && !TextUtils.isEmpty(task.result)) {
+                        val token: String = task.result!!
+                        FirebaseService.token = token
+                    }
+                }
+            }
+
 
         userRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
@@ -43,12 +53,15 @@ class UserActivity : AppCompatActivity() {
             val intent = Intent(this@UserActivity, ProfileActivity::class.java)
             startActivity(intent)
         }
-
         getUsersList()
     }
 
     private fun getUsersList() {
         var firebase: FirebaseUser = FirebaseAuth.getInstance().currentUser!!
+
+        var userId = firebase.uid
+        FirebaseMessaging.getInstance().subscribeToTopic("/topics/$userId")
+
         var databaseReference: DatabaseReference =
             FirebaseDatabase.getInstance().getReference("Users")
 

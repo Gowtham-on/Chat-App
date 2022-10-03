@@ -84,11 +84,13 @@ class ProfileActivity : AppCompatActivity() {
             progressBar.visibility = View.VISIBLE
             uploadImage()
         }
-//        imgProfile.setOnClickListener {
-//            val intent = Intent(this@ProfileActivity, UserActivity::class.java)
-//            startActivity(intent)
-//            finish()
-//        }
+
+        logOutBtn.setOnClickListener {
+            val intent = Intent(this@ProfileActivity, LoginActivity::class.java)
+            FirebaseAuth.getInstance().signOut()
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun chooseImage() {

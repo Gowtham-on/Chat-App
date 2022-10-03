@@ -3,6 +3,7 @@ package com.project.chatapp.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -11,18 +12,28 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
 import com.project.chatapp.R
+import com.project.chatapp.RetrofitInstance
+import com.project.chatapp.`interface`.NotificationApi
 import com.project.chatapp.adapter.ChatAdapter
 import com.project.chatapp.adapter.UserAdapter
 import com.project.chatapp.model.Chat
+import com.project.chatapp.model.NotificationData
+import com.project.chatapp.model.PushNotification
 import com.project.chatapp.model.User
 import kotlinx.android.synthetic.main.activity_chat.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class ChatActivity : AppCompatActivity() {
 
     var firebaseUser: FirebaseUser?? = null
     var databaseReference: DatabaseReference? = null
     var chatList = ArrayList<Chat>()
+    var topic = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +43,7 @@ class ChatActivity : AppCompatActivity() {
 
         var intent = getIntent()
         var userId = intent.getStringExtra("userId")
+        var userName = intent.getStringExtra("userName")
 
         firebaseUser = FirebaseAuth.getInstance().currentUser
         databaseReference =
@@ -65,9 +77,17 @@ class ChatActivity : AppCompatActivity() {
             } else {
                 sendMessage(firebaseUser!!.uid, userId, message)
                 etMessage.setText("")
+
+                topic = "/topics/$userId"
+                PushNotification(
+                    NotificationData(userName!!, message),
+                    topic
+                ).also {
+                    sendNotification(it)
+                }
+
             }
         }
-
         readMessage(firebaseUser!!.uid, userId)
     }
 
@@ -113,5 +133,31 @@ class ChatActivity : AppCompatActivity() {
         })
     }
 
+    private fun sendNotification(notification: PushNotification) {
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                val response = RetrofitInstance.api.postNotification(notification)
+                if (response.isSuccessful) {
+                    Toast.makeText(
+                        this@ChatActivity,
+                        "Response ${Gson().toJson(response)}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        this@ChatActivity,
+                        "Response ${Gson().toJson(response)}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } catch (e: Exception) {
+//                Toast.makeText(
+//                    applicationContext,
+//                    e.message,
+//                    Toast.LENGTH_SHORT
+//                ).show()
+            }
+        }
+    }
 
 }

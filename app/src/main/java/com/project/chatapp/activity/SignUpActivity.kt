@@ -91,6 +91,8 @@ class SignUpActivity : AppCompatActivity() {
                             etConfirmPassword.setText("")
                             val intent = Intent(this@SignUpActivity, UserActivity::class.java)
                             startActivity(intent)
+                        } else {
+                            Toast.makeText(applicationContext, "failed", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
