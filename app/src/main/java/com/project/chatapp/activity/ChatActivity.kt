@@ -3,6 +3,7 @@ package com.project.chatapp.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +24,8 @@ import com.project.chatapp.model.NotificationData
 import com.project.chatapp.model.PushNotification
 import com.project.chatapp.model.User
 import kotlinx.android.synthetic.main.activity_chat.*
+import kotlinx.android.synthetic.main.item_left.*
+import kotlinx.android.synthetic.main.item_right.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -34,6 +37,8 @@ class ChatActivity : AppCompatActivity() {
     var databaseReference: DatabaseReference? = null
     var chatList = ArrayList<Chat>()
     var topic = ""
+    var profileUri:String? = null
+    var userProfile:String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +49,10 @@ class ChatActivity : AppCompatActivity() {
         var intent = getIntent()
         var userId = intent.getStringExtra("userId")
         var userName = intent.getStringExtra("userName")
+        profileUri = intent.getStringExtra("profileUri")
+        userProfile = intent.getStringExtra("userProfile")
+
+        Log.d("checkinglist",  profileUri.toString())
 
         firebaseUser = FirebaseAuth.getInstance().currentUser
         databaseReference =
@@ -58,10 +67,10 @@ class ChatActivity : AppCompatActivity() {
                 val user = snapshot.getValue(User::class.java)
 
                 tvUserName.text = user!!.userName
-                if (user.profileImage == "") {
+                if (user.storageProf == "") {
                     imgProfileInChat.setImageResource(R.drawable.profile_image)
                 } else {
-                    Glide.with(this@ChatActivity).load(user.profileImage).into(imgProfileInChat)
+                    Glide.with(this@ChatActivity).load(user.storageProf).into(imgProfileInChat)
                 }
             }
 
@@ -123,7 +132,7 @@ class ChatActivity : AppCompatActivity() {
                     }
                 }
 
-                val chatAdapter = ChatAdapter(this@ChatActivity, chatList)
+                val chatAdapter = ChatAdapter(this@ChatActivity, chatList, profileUri!!, userProfile!!)
                 chatRecyclerView.adapter = chatAdapter
             }
 

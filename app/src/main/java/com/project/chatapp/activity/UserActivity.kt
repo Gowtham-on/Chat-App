@@ -2,6 +2,7 @@ package com.project.chatapp.activity
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -13,6 +14,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.project.chatapp.R
 import com.project.chatapp.adapter.UserAdapter
 import com.project.chatapp.firebase.FirebaseService
@@ -27,6 +30,10 @@ import kotlinx.android.synthetic.main.item_user.*
 
 class UserActivity : AppCompatActivity() {
     var userList = ArrayList<User>()
+
+    private lateinit var storage: FirebaseStorage
+    private lateinit var storageRef: StorageReference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user)
@@ -41,6 +48,11 @@ class UserActivity : AppCompatActivity() {
                     }
                 }
             }
+
+        storage = FirebaseStorage.getInstance()
+        storageRef = storage.reference
+
+//        var uri:Uri? = "gs://chatapp-82c40.appspot.com/image/9194bd5d-8c3f-4f97-bb9a-faec7e5bbcda" as Uri
 
 
         userRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
@@ -71,22 +83,25 @@ class UserActivity : AppCompatActivity() {
                 userList.clear()
 
                 val currentUser = snapshot.getValue(User::class.java)
-
-                if (currentUser!!.profileImage == "") {
-                    imgProfile.setImageResource(R.drawable.profile_image)
-                } else {
-                    Glide.with(this@UserActivity).load(currentUser.profileImage).into(imgProfile)
-                }
+                var testingForImg: User? = null
 
                 for (dataSnapshot: DataSnapshot in snapshot.children) {
                     val user = dataSnapshot.getValue(User::class.java)
 
                     if (!user!!.userId.equals(firebase.uid)) {
                         userList.add(user)
+                    } else {
+                        testingForImg = user
                     }
                 }
 
-                val userAdapter = UserAdapter(this@UserActivity, userList)
+                if (testingForImg!!.storageProf == "") {
+                    imgProfile.setImageResource(R.drawable.profile_image)
+                } else {
+                    Glide.with(this@UserActivity).load(testingForImg.storageProf).into(imgProfile)
+                }
+
+                val userAdapter = UserAdapter(this@UserActivity, userList, testingForImg.storageProf!!)
                 userRecyclerView.adapter = userAdapter
             }
 

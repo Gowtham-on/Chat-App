@@ -18,12 +18,18 @@ import com.project.chatapp.model.Chat
 import com.project.chatapp.model.User
 import de.hdodenhof.circleimageview.CircleImageView
 
-class ChatAdapter(private val context: Context, private val chatList: ArrayList<Chat>) :
+class ChatAdapter(
+    private val context: Context,
+    private val chatList: ArrayList<Chat>,
+    private val profileUri: String,
+    private val userProfile: String
+) :
     RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     private val MESSAGE_TYPE_LEFT = 0
     private val MESSAGE_TYPE_RIGHT = 1
     private var firebaseUser: FirebaseUser? = null
+    private var side: Int = 0
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatAdapter.ViewHolder {
@@ -40,8 +46,15 @@ class ChatAdapter(private val context: Context, private val chatList: ArrayList<
 
     override fun onBindViewHolder(holder: ChatAdapter.ViewHolder, position: Int) {
         val chat = chatList[position]
+
         holder.txtUsername.text = chat.message
-//        Glide.with(context).load(chat.profileImage).placeholder(R.drawable.profile_image).into(holder.imgUser)
+        if (side == 1 && profileUri != "") {
+            Glide.with(context).load(profileUri).into(holder.imgUser)
+        } else if (side == 0 && userProfile != ""){
+            Glide.with(context).load(userProfile).into(holder.imgUser)
+        } else {
+            Glide.with(context).load(R.drawable.profile_image).into(holder.imgUser)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -50,15 +63,17 @@ class ChatAdapter(private val context: Context, private val chatList: ArrayList<
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val txtUsername: TextView = view.findViewById(R.id.tvMessage)
-        val imgUser: CircleImageView = view.findViewById(R.id.userImage)
+        val imgUser: CircleImageView = view.findViewById(R.id.usrImg)
     }
 
     override fun getItemViewType(position: Int): Int {
         firebaseUser = FirebaseAuth.getInstance().currentUser
 
         if (chatList[position].senderId == firebaseUser!!.uid) {
+            side = 0
             return MESSAGE_TYPE_RIGHT
         } else {
+            side = 1
             return MESSAGE_TYPE_LEFT
         }
     }

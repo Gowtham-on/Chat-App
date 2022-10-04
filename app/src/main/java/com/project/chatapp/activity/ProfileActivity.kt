@@ -34,7 +34,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private lateinit var firebaseUser: FirebaseUser
     private lateinit var databaseReference: DatabaseReference
-    private val hashMap: HashMap<String, String> = HashMap()
+    private val hashMap: HashMap<String, Any> = HashMap()
     private var filePath: Uri? = null
     private var PICK_IMAGE_REQUEST: Int = 2020
 
@@ -98,7 +98,6 @@ class ProfileActivity : AppCompatActivity() {
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
         startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST)
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -122,14 +121,17 @@ class ProfileActivity : AppCompatActivity() {
             ref.putFile(filePath!!)
                 .addOnSuccessListener {
 
-
-
-                    hashMap.put("userName",etUserName.text.toString())
+                    hashMap.put("userName", etUserName.text.toString())
                     hashMap.put("profileImage", filePath.toString())
 
-                    Log.d("Checkingg", "$filePath is the path")
+                    storageRef.child("image/${ref.name}").downloadUrl.addOnSuccessListener {
 
-                    databaseReference.updateChildren(hashMap as Map<String, Any>)
+                        hashMap["storageProf"] = it.toString()
+                        databaseReference.updateChildren(hashMap as Map<String, Any>)
+
+                    }.addOnFailureListener {
+                        Log.d("checkingurl", "failed")
+                    }
 
                     progressBar.visibility = View.GONE
                     Toast.makeText(applicationContext, "Uploaded", Toast.LENGTH_SHORT).show()
@@ -143,7 +145,6 @@ class ProfileActivity : AppCompatActivity() {
                         "Upload Failed ${it.message}",
                         Toast.LENGTH_SHORT
                     ).show()
-
                 }
         }
     }

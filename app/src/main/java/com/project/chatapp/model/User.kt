@@ -1,3 +1,5 @@
 package com.project.chatapp.model
 
-data class User(val userId: String = "", val userName: String = "", val profileImage: String = "")
+import android.net.Uri
+
+data class User(val userId: String = "", val userName: String = "", val profileImage: String = "", val storageProf: String? = "")

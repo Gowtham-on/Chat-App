@@ -81,6 +81,7 @@ class SignUpActivity : AppCompatActivity() {
                     hashMap["userId"] = userId
                     hashMap["userName"] = userName
                     hashMap["profileImage"] = ""
+                    hashMap["storageProf"] = ""
 
                     databaseReference.setValue(hashMap).addOnCompleteListener(this) {
                         if (it.isSuccessful) {

@@ -10,12 +10,15 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.project.chatapp.R
 import com.project.chatapp.activity.ChatActivity
 import com.project.chatapp.model.User
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.android.synthetic.main.activity_user.*
 
-class UserAdapter(private val context: Context, private val userList: ArrayList<User>) :
+class UserAdapter(private val context: Context, private val userList: ArrayList<User>, private val userProfile: String) :
     RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserAdapter.ViewHolder {
@@ -28,15 +31,25 @@ class UserAdapter(private val context: Context, private val userList: ArrayList<
         val user = userList[position]
         holder.txtUsername.text = user.userName
 
+//        Log.d("Checkingg", user.storageProf.toString() + " profile img in UserAdapter")
 
-        Log.d("Checkingg", user.profileImage + " profile img in UserAdapter")
-        Glide.with(context).load(user.profileImage).placeholder(R.drawable.profile_image)
-            .into(holder.imgUser)
+        if (user.storageProf == "") {
+            Glide.with(context)
+                .load(R.drawable.profile_image)
+                .into(holder.imgUser)
+        } else {
+            Glide.with(context)
+                .load(user.storageProf)
+                .into(holder.imgUser)
+        }
+
 
         holder.layoutUser.setOnClickListener {
             val intent = Intent(context, ChatActivity::class.java)
             intent.putExtra("userId", user.userId)
             intent.putExtra("userName", user.userName)
+            intent.putExtra("profileUri", user.storageProf)
+            intent.putExtra("userProfile", userProfile)
             context.startActivity(intent)
         }
 
@@ -51,6 +64,7 @@ class UserAdapter(private val context: Context, private val userList: ArrayList<
         val txtTemp: TextView = view.findViewById(R.id.temp)
         var imgUser: CircleImageView = view.findViewById(R.id.userImage)
         val layoutUser: LinearLayout = view.findViewById(R.id.layoutUser)
+
     }
 
 }
