@@ -160,11 +160,7 @@ class ChatActivity : AppCompatActivity() {
                     ).show()
                 }
             } catch (e: Exception) {
-//                Toast.makeText(
-//                    applicationContext,
-//                    e.message,
-//                    Toast.LENGTH_SHORT
-//                ).show()
+//
             }
         }
     }

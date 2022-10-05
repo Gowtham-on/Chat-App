@@ -77,5 +77,4 @@ class ChatAdapter(
             return MESSAGE_TYPE_LEFT
         }
     }
-
 }

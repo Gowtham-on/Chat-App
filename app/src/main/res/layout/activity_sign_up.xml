@@ -79,14 +79,14 @@
         android:textColor="#813fd7" />
 
         <Button
-            android:id="@+id/btnSignUp"
+            android:id="@+id/next"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="2dp"
             android:layout_margin="15dp"
             android:background="@color/ColorPrimary"
             android:textColor="@color/ColorAccent"
-            android:text="@string/label_sign_up"/>
+            android:text="@string/next"/>
 
         <Button
             android:id="@+id/btnLogin"

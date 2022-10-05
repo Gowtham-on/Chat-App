@@ -22,13 +22,6 @@ class LoginActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-//        if(auth.currentUser == null) {
-//            Log.d("LoginChk", "in if")
-//            val intent = Intent(this@LoginActivity, LoginActivity::class.java)
-//            startActivity(intent)
-//        }
-//        firebaseUser =
-
         if(auth.currentUser != null) {
             val intent = Intent(this@LoginActivity, UserActivity::class.java)
             startActivity(intent)
@@ -64,11 +57,10 @@ class LoginActivity : AppCompatActivity() {
                     }
             }
         }
-        btnSignup.setOnClickListener {
+        firstPage.setOnClickListener {
             val intent = Intent(this@LoginActivity, SignUpActivity::class.java)
             startActivity(intent)
             finish()
         }
-
     }
 }

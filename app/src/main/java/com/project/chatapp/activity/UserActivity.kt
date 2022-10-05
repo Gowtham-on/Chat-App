@@ -31,12 +31,22 @@ import kotlinx.android.synthetic.main.item_user.*
 class UserActivity : AppCompatActivity() {
     var userList = ArrayList<User>()
 
+    private lateinit var auth: FirebaseAuth
     private lateinit var storage: FirebaseStorage
     private lateinit var storageRef: StorageReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user)
+
+        auth = FirebaseAuth.getInstance()
+
+        if(auth.currentUser == null) {
+            val intent = Intent(this@UserActivity, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
 
         FirebaseService.sharedPref = getSharedPreferences("sharedPref", Context.MODE_PRIVATE)
         FirebaseMessaging.getInstance().token

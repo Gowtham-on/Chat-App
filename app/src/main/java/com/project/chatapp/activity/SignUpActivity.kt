@@ -14,16 +14,12 @@ import kotlinx.android.synthetic.main.activity_sign_up.*
 
 class SignUpActivity : AppCompatActivity() {
 
-    private lateinit var auth: FirebaseAuth
-    private lateinit var databaseReference: DatabaseReference
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
 
-        auth = FirebaseAuth.getInstance()
 
-        btnSignUp.setOnClickListener {
+        next.setOnClickListener {
             val userName: String = etName.text.toString()
             val email: String = etEmail.text.toString()
             val password: String = etPassword.text.toString()
@@ -54,7 +50,15 @@ class SignUpActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                registerUser(userName, email, password)
+                etName.setText("")
+                etEmail.setText("")
+                etPassword.setText("")
+                etConfirmPassword.setText("")
+                val intent = Intent(this@SignUpActivity, UserIdActivity::class.java)
+                intent.putExtra("userName", userName)
+                intent.putExtra("email", email)
+                intent.putExtra("password", password)
+                startActivity(intent)
             }
         }
 
@@ -66,37 +70,5 @@ class SignUpActivity : AppCompatActivity() {
 
     }
 
-    private fun registerUser(userName: String, email: String, password: String) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) {
-                if (it.isSuccessful) {
-                    val user: FirebaseUser? = auth.currentUser
-                    val userId: String = user!!.uid
 
-                    databaseReference =
-                        FirebaseDatabase.getInstance().getReference("Users").child(userId)
-
-                    val hashMap: HashMap<String, String> = HashMap()
-
-                    hashMap["userId"] = userId
-                    hashMap["userName"] = userName
-                    hashMap["profileImage"] = ""
-                    hashMap["storageProf"] = ""
-
-                    databaseReference.setValue(hashMap).addOnCompleteListener(this) {
-                        if (it.isSuccessful) {
-                            // Open Home activity
-                            etName.setText("")
-                            etEmail.setText("")
-                            etPassword.setText("")
-                            etConfirmPassword.setText("")
-                            val intent = Intent(this@SignUpActivity, UserActivity::class.java)
-                            startActivity(intent)
-                        } else {
-                            Toast.makeText(applicationContext, "failed", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            }
-    }
 }
