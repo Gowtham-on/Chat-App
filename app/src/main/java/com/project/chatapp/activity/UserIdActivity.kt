@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
@@ -42,12 +43,13 @@ class UserIdActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         btnSignup.setOnClickListener {
             progressBarInLogin.visibility = View.VISIBLE
+            Log.d("checkin", "inside")
             isPresent(userId.text.toString())
         }
     }
 
     private fun isPresent(currentUserId: String) {
-
+        Log.d("checkin", "inside")
         var userName:String? = intent.getStringExtra("userName")
         var email:String? = intent.getStringExtra("email")
         var password:String? = intent.getStringExtra("password")
@@ -74,7 +76,7 @@ class UserIdActivity : AppCompatActivity() {
                     progressBarInLogin.visibility = View.GONE
                 } else {
                     Log.d("checkin", "present")
-                    userId.setText("")
+
                     registerUser(userName!!, email!!, password!!, currentUserId)
                 }
 
@@ -89,34 +91,44 @@ class UserIdActivity : AppCompatActivity() {
 
     }
     private fun registerUser(userName: String, email: String, password: String, currentId: String) {
+        var editText: EditText = findViewById(R.id.userId)
+
+        Log.d("checkingSpeed", "in reg user")
+
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) {
-                if (it.isSuccessful) {
+                Log.d("checkingSpeed", "in createEmail n pass")
+                    Log.d("checkingSpeed", "authorized")
                     val user: FirebaseUser? = auth.currentUser
                     val userId: String = user!!.uid
 
                     databaseReference =
                         FirebaseDatabase.getInstance().getReference("Users").child(userId)
 
-                    val hashMap: HashMap<String, String> = HashMap()
+                    val hashMap: HashMap<String, Any> = HashMap()
+                    val friendsHashMap: ArrayList<String> = ArrayList()
+                    friendsHashMap.add("")
 
                     hashMap["userId"] = userId
                     hashMap["userName"] = userName
                     hashMap["profileImage"] = ""
                     hashMap["storageProf"] = ""
                     hashMap["currentId"] = currentId
+                    hashMap["friends"] = friendsHashMap
+                    Log.d("checkingSpeed", "_____in____")
 
                     databaseReference.setValue(hashMap).addOnCompleteListener(this) {
                         if (it.isSuccessful) {
                             progressBarInLogin.visibility = View.GONE
+                            editText.setText("")
                             val intent = Intent(this@UserIdActivity, UserActivity::class.java)
                             startActivity(intent)
+                            finish()
                         } else {
                             Toast.makeText(applicationContext, "failed", Toast.LENGTH_SHORT).show()
                             progressBarInLogin.visibility = View.GONE
                         }
                     }
-                }
             }
     }
 }

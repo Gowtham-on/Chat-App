@@ -50,10 +50,6 @@ class SignUpActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                etName.setText("")
-                etEmail.setText("")
-                etPassword.setText("")
-                etConfirmPassword.setText("")
                 val intent = Intent(this@SignUpActivity, UserIdActivity::class.java)
                 intent.putExtra("userName", userName)
                 intent.putExtra("email", email)

@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,21 +11,15 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.project.chatapp.R
 import com.project.chatapp.RetrofitInstance
-import com.project.chatapp.`interface`.NotificationApi
 import com.project.chatapp.adapter.ChatAdapter
-import com.project.chatapp.adapter.UserAdapter
 import com.project.chatapp.model.Chat
 import com.project.chatapp.model.NotificationData
 import com.project.chatapp.model.PushNotification
 import com.project.chatapp.model.User
 import kotlinx.android.synthetic.main.activity_chat.*
-import kotlinx.android.synthetic.main.item_left.*
-import kotlinx.android.synthetic.main.item_right.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -59,7 +52,9 @@ class ChatActivity : AppCompatActivity() {
             FirebaseDatabase.getInstance().getReference("Users").child(userId!!)
 
         imgBackInProfile.setOnClickListener {
-            onBackPressed()
+            var intent = Intent(this@ChatActivity, UserActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
         databaseReference!!.addValueEventListener(object : ValueEventListener {
